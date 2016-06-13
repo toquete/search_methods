@@ -20,6 +20,11 @@ public class Main {
 		
 		String pathBreadth = graph.buscaLargura(input);
 		System.out.println("Caminho percorrido - largura: " + pathBreadth);
+		
+		graph.criaGrafo();
+		
+		String pathHill = graph.buscaHillClimbing(input);
+		System.out.println("Caminho percorrido - hill climbing: " + pathHill);
 	}
 }
 

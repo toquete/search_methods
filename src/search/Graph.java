@@ -11,27 +11,27 @@ public class Graph {
 	             nodeU, nodeV, nodeW;
 
 	public void criaGrafo(){
-		nodeA = new Node("A", 2);
-		nodeB = new Node("B", 4);
-		nodeC = new Node("C", 3);
-		nodeD = new Node("D", 2);
-		nodeE = new Node("E", 3);
-		nodeF = new Node("F", 3);
-		nodeG = new Node("G", 3);
-		nodeH = new Node("H", 2);
-		nodeI = new Node("I", 4);
-		nodeK = new Node("K", 3);
-		nodeL = new Node("L", 2);
-		nodeM = new Node("M", 2);
-		nodeN = new Node("N", 2);
-		nodeP = new Node("P", 3);
-		nodeQ = new Node("Q", 2);
-		nodeR = new Node("R", 2);
-		nodeS = new Node("S", 2);
-		nodeT = new Node("T", 4);
-		nodeU = new Node("U", 2);
-		nodeV = new Node("V", 2);
-		nodeW = new Node("W", 2);
+		nodeA = new Node("A", 2, 0, 15);
+		nodeB = new Node("B", 4, 2, 13);
+		nodeC = new Node("C", 3, 2, 9);
+		nodeD = new Node("D", 2, 0, 7);
+		nodeE = new Node("E", 3, 2, 6);
+		nodeF = new Node("F", 3, 10, 0);
+		nodeG = new Node("G", 3, 2, 3);
+		nodeH = new Node("H", 2, 0, 1);
+		nodeI = new Node("I", 4, 2, 17);
+		nodeK = new Node("K", 3, 2, 0);
+		nodeL = new Node("L", 2, 7, 17);
+		nodeM = new Node("M", 2, 18, 0);
+		nodeN = new Node("N", 2, 11, 11);
+		nodeP = new Node("P", 3, 11, 8);
+		nodeQ = new Node("Q", 2, 9, 8);
+		nodeR = new Node("R", 2, 9, 10);
+		nodeS = new Node("S", 2, 7, 10);
+		nodeT = new Node("T", 4, 7, 6);
+		nodeU = new Node("U", 2, 14, 8);
+		nodeV = new Node("V", 2, 14, 6);
+		nodeW = new Node("W", 2, 7, 3);
 		
 		// NodeI
 		nodeI.setSon(0, nodeA);
@@ -209,6 +209,36 @@ public class Graph {
 			}
 			else
 				queue.poll();
+		}
+		
+		return path;
+	}
+	
+	public String buscaHillClimbing(String graphName){
+		Stack<Node> stack = new Stack<Node>();
+		Node node, nodeAdj;
+		boolean found = false;
+		
+		String path = nodeI.getNodeName() + " > ";
+		nodeI.setVisited(true);
+		
+		stack.push(nodeI);
+		
+		while(!stack.isEmpty()){
+			if (!found){
+				node = (Node)stack.peek();
+				
+				nodeAdj = node.getHillClimbingNode(node);
+				if(nodeAdj != null){
+					found = nodeAdj.getNodeName().equals(graphName);
+					path += nodeAdj.getNodeName() + " > ";
+					stack.push(nodeAdj);
+				}
+				else
+					stack.pop();
+			}
+			else
+				stack.pop();
 		}
 		
 		return path;
