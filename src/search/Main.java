@@ -25,6 +25,11 @@ public class Main {
 		
 		String pathHill = graph.buscaHillClimbing(input);
 		System.out.println("Caminho percorrido - hill climbing: " + pathHill);
+		
+		graph.criaGrafo();
+		
+		String pathBestFirst = graph.buscaBestFirst(input);
+		System.out.println("Caminho percorrido - best first: " + pathBestFirst);
 	}
 }
 

@@ -1,10 +1,15 @@
 package search;
 
-public class Node {
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
+public class Node implements Comparable<Node>{
 	private Boolean visited;
 	private String nodeName;
 	private Integer x;
 	private Integer y;
+	private Double targetDistance;
 	private Node sons[] = null;
 	
 	
@@ -52,6 +57,14 @@ public class Node {
 		this.y = y;
 	}
 
+	public Double getTargetDistance() {
+		return targetDistance;
+	}
+
+	public void setTargetDistance(Double targetDistance) {
+		this.targetDistance = targetDistance;
+	}
+
 	public Node[] getSons() {
 		return sons;
 	}
@@ -64,12 +77,24 @@ public class Node {
 		return Math.sqrt(((Math.pow((x1 - x2), 2)) + (Math.pow((y1 - y2), 2))));
 	}
 	
+	public List<Node> getSortedList(Node target) {
+		List <Node> list = new LinkedList<Node>();
+		
+		for (Node node : this.sons) {
+			node.setTargetDistance(getDistance(target.x, node.x, target.y, node.y));
+			list.add(node);
+		}
+		
+		Collections.sort(list);
+		return list;
+	}
+	
 	public Node getUnvisitedNode(Node node){
 		Node retNode = null;
-		for (int i = 0; i < node.getSons().length; i++) {
-			if (!node.getSons()[i].getVisited()){
-				node.getSons()[i].setVisited(true);
-				retNode = node.getSons()[i];
+		for (Node aux : node.sons) {
+			if (!aux.getVisited()){
+				aux.setVisited(true);
+				retNode = aux;
 				break;
 			}
 		}
@@ -94,5 +119,30 @@ public class Node {
 		
 		retNode.setVisited(true);
 		return retNode;
+	}
+	
+	public Node getBestFirstNode(Node target) {
+		Node retNode = null;
+		List<Node> list = new LinkedList<Node>();
+		
+		list = getSortedList(target);
+		
+		for (Node node : list) {
+			if (!node.getVisited()) {
+				retNode = node;
+				break;
+			}
+		}
+		
+		return retNode;
+	}
+
+	@Override
+	public int compareTo(Node other) {
+		if (this.targetDistance < other.targetDistance)
+			return -1;
+		if (this.targetDistance > other.targetDistance)
+			return 1;
+		return 0;
 	}
 }

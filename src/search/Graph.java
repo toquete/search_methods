@@ -1,6 +1,9 @@
 package search;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Stack;
 
@@ -132,16 +135,16 @@ public class Graph {
 	
 	public void resetNodes(){
 		Queue<Node> queue = new LinkedList<Node>();
-		Node node, nodeAdj;
+		Node node;
 		
 		nodeI.setVisited(false);
 		queue.offer(nodeI);
 		
 		while(!queue.isEmpty()){
 			node = queue.poll();
-			for (int i = 0; i < node.getSons().length; i++) {
-				if (!node.getNodeName().equals(node.getSons()[i].getNodeName())){
-					node.getSons()[i].setVisited(false);
+			for (Node aux : node.getSons()) {
+				if (!node.getNodeName().equals(aux.getNodeName())){
+					aux.setVisited(false);
 					queue.offer(node);
 				}
 			}
@@ -178,12 +181,12 @@ public class Graph {
 		return path;
 	}
 	
-	public String buscaLargura(String graphName){
+	public String buscaLargura(String graphName) {
 		Queue<Node> queue = new LinkedList<Node>();
 		Node node, nodeAdj;
 		boolean found = false;
 		String path = "";
-		
+	
 		nodeI.setVisited(true);
 		
 		queue.offer(nodeI);
@@ -239,6 +242,53 @@ public class Graph {
 			}
 			else
 				stack.pop();
+		}
+		
+		return path;
+	}
+	
+	public String buscaBestFirst(String graphName){
+		Queue<Node> queue = new LinkedList<Node>();
+		Node node, aux, target = null;
+		boolean found = false;
+		String path = "";
+		
+		Class<?> c = this.getClass();
+		Field[] fields = c.getDeclaredFields();
+		
+		for (Field field : fields) {
+			if (field.getName().equals("node" + graphName)){
+				try {
+					target = (Node)field.get(this);
+				} catch (IllegalArgumentException | IllegalAccessException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		nodeI.setVisited(true);
+		
+		queue.offer(nodeI);
+		
+		while (!queue.isEmpty()) {
+			if(!found){
+				node = (Node)queue.poll();
+				
+				if (path.isEmpty())
+					path = node.getNodeName() + " > ";
+				else
+					path += node.getNodeName() + " > ";
+				
+				found = node.getNodeName().equals(graphName);
+				
+				if(!found){
+					aux = node.getBestFirstNode(target);
+					aux.setVisited(true);
+					queue.offer(aux);
+				}
+			}
+			else
+				queue.poll();
 		}
 		
 		return path;
