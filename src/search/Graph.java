@@ -2,6 +2,7 @@ package search;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -293,4 +294,49 @@ public class Graph {
 		
 		return path;
 	}
+	
+	public String buscaCustoUniforme(String graphName){
+		List<Node> list = new ArrayList<Node>();
+		List<UniformCost> listCost = new ArrayList<UniformCost>();
+		boolean found = false;
+		String path = "";
+		
+		UniformCost cost = new UniformCost();
+		cost.setNode(nodeI);
+		cost.setNextNodeDistance(0.0);
+		listCost.add(cost);
+		
+		while (!listCost.isEmpty()) {
+			if(!found){
+				while(listCost.get(0).getNode().getVisited())
+					listCost.remove(0);
+				
+				UniformCost uc = listCost.remove(0);
+				uc.getNode().setVisited(true);
+				
+				if (path.isEmpty())
+					path = uc.getNode().getNodeName() + " > ";
+				else
+					path += uc.getNode().getNodeName() + " > ";
+				
+				found = uc.getNode().getNodeName().equals(graphName);
+				
+				if(!found){
+					List<UniformCost> aux = new ArrayList<UniformCost>();
+					aux = uc.getSonsList(uc.getNode());
+					
+					for (UniformCost uniformCost : aux) {
+						uniformCost.setNextNodeDistance(uniformCost.getNextNodeDistance() + uc.getNextNodeDistance());
+					}
+					
+					listCost.addAll(aux);
+					Collections.sort(listCost);
+				}
+			}
+			else if (!listCost.isEmpty())
+				listCost.remove(0);
+		}
+		
+		return path;
+	}	
 }

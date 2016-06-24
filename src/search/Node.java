@@ -12,6 +12,9 @@ public class Node implements Comparable<Node>{
 	private Double targetDistance;
 	private Node sons[] = null;
 	
+	public Node(){
+		
+	}
 	
 	public Node(String nodeName, Integer sonsNum, Integer x, Integer y){
 		this.visited = false;
@@ -19,7 +22,6 @@ public class Node implements Comparable<Node>{
 		this.x = x;
 		this.y = y;
 		this.sons = new Node[sonsNum];
-		
 	}
 
 	public Boolean getVisited() {
