@@ -75,7 +75,7 @@ public class Node implements Comparable<Node>{
 		this.sons[position] = node;
 	}
 	
-	private Double getDistance(Integer x1, Integer x2, Integer y1, Integer y2){
+	public Double getDistance(Integer x1, Integer x2, Integer y1, Integer y2){
 		return Math.sqrt(((Math.pow((x1 - x2), 2)) + (Math.pow((y1 - y2), 2))));
 	}
 	
@@ -133,6 +133,24 @@ public class Node implements Comparable<Node>{
 			if (!node.getVisited()) {
 				retNode = node;
 				break;
+			}
+		}
+		
+		return retNode;
+	}
+	
+	public Node getASearchNode(Node node) {
+		Node retNode = new Node();
+		Double function = 1000.0, sum;
+		
+		for (Node aux : sons) {
+			if (!aux.getVisited()) {
+				sum = getDistance(node.x, aux.x, node.y, node.y) + aux.getTargetDistance();
+				
+				if (sum < function) {
+					function = sum;
+					retNode = aux;
+				}
 			}
 		}
 		

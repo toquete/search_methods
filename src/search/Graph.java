@@ -296,7 +296,6 @@ public class Graph {
 	}
 	
 	public String buscaCustoUniforme(String graphName){
-		List<Node> list = new ArrayList<Node>();
 		List<UniformCost> listCost = new ArrayList<UniformCost>();
 		boolean found = false;
 		String path = "";
@@ -339,4 +338,57 @@ public class Graph {
 		
 		return path;
 	}	
+	
+	public String buscaA(String graphName) {
+		List<Node> list = new LinkedList<Node>();
+		Node node, target = null;
+		boolean found = false;
+		String path = "";
+		
+		Class<?> c = this.getClass();
+		Field[] fields = c.getDeclaredFields();
+		
+		for (Field field : fields) {
+			if (field.getName().equals("node" + graphName)){
+				try {
+					target = (Node)field.get(this);
+				} catch (IllegalArgumentException | IllegalAccessException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		nodeI.setVisited(true);
+		list.add(nodeI);
+		
+		while(!list.isEmpty()) {
+			if(!found) {
+				node = list.remove(0);
+				
+				if (path.isEmpty())
+					path = node.getNodeName() + " > ";
+				else
+					path += node.getNodeName() + " > ";
+				
+				found = node.getNodeName().equals(graphName);
+				
+				if (!found) {
+					for (Node aux : node.getSons()) {
+						if (!aux.getVisited()) {
+							Double distance = aux.getDistance(aux.getX(), target.getX(), aux.getY(), target.getY());
+							aux.setTargetDistance(distance);
+						}
+					}
+					
+					node = node.getASearchNode(node);
+					node.setVisited(true);
+					list.add(node);
+				}
+			}
+			else
+				list.remove(0);
+		}
+		
+		return path;
+	}
 }

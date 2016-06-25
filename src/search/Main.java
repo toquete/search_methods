@@ -38,6 +38,11 @@ public class Main {
 		
 		path = graph.buscaCustoUniforme(input);
 		System.out.println("Caminho percorrido - custo uniforme: " + path);
+		
+		graph.criaGrafo();
+		
+		path = graph.buscaA(input);
+		System.out.println("Caminho percorrido - busca A*: " + path);		
 	}
 }
 
